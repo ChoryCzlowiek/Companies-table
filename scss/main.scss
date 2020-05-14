@@ -1,0 +1,31 @@
+*, *::before, *::after{
+    box-sizing: border-box;
+    font-family: 'Roboto Condensed', sans-serif;
+}
+
+body{
+    margin: 0;
+    padding: 0;
+}
+
+.wrapper{
+    width: 100%;
+    background-color: bisque;
+    overflow: hidden;
+    position: relative;
+
+    .table{
+        margin: 5vh auto;
+        width: 80%;
+        max-height: 90vh;
+        border-collapse: collapse;
+
+        &__item{
+            padding: 0 .2rem;
+        }
+
+        &, &__item{
+            border: 2px solid black;
+        }
+    }
+}
