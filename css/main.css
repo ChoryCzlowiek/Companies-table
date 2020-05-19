@@ -11,9 +11,25 @@ body {
 
 .wrapper {
   width: 100%;
+  min-height: 100vh;
   background-color: bisque;
   overflow: hidden;
   position: relative;
+}
+
+.wrapper__input {
+  position: absolute;
+  top: 5vh;
+  right: 10%;
+  -webkit-transform: translateY(-110%);
+          transform: translateY(-110%);
+  border: 2px solid black;
+  padding: 3px;
+}
+
+.wrapper__input:focus {
+  outline: none;
+  border: 4px solid orangered;
 }
 
 .wrapper .table {
@@ -24,10 +40,45 @@ body {
 }
 
 .wrapper .table__item {
-  padding: 0 .2rem;
+  padding: .2rem;
+  font-size: .6rem;
+}
+
+.wrapper .table__item--header {
+  cursor: pointer;
+  font-size: .8rem;
+  color: beige;
+  background-color: olive;
 }
 
 .wrapper .table, .wrapper .table__item {
   border: 2px solid black;
+}
+
+@media (min-width: 768px) {
+  .wrapper__input {
+    width: 30%;
+    padding: 5px;
+  }
+  .wrapper .table__item {
+    padding: .4rem;
+    font-size: 1.1rem;
+  }
+  .wrapper .table__item--header {
+    font-size: 1.3rem;
+  }
+  .wrapper .table, .wrapper .table__item {
+    border: 3px solid black;
+  }
+}
+
+@media (orientation: landscape) {
+  .wrapper__input {
+    position: absolute;
+    top: 10vh;
+  }
+  .wrapper .table {
+    margin: 10vh auto;
+  }
 }
 /*# sourceMappingURL=main.css.map */

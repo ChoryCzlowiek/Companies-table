@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Comapnies table</title>
+    <title>Companies table</title>
     <link rel="stylesheet" href="./css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300;400;700&display=swap"
         rel="stylesheet">
@@ -12,14 +12,16 @@
 
 <body>
     <main class="wrapper">
+        <input type="text" class="wrapper__input" onkeyup="myFunction()" placeholder="Search for names..">
+
         <table class="wrapper__table table">
             <tr class="table__row">
-                <th class="table__item">ID</th>
-                <th class="table__item">Name</th>
-                <th class="table__item">City</th>
-                <th class="table__item">Total income</th>
-                <th class="table__item">Average income</th>
-                <th class="table__item">Last month income</th>
+                <th class="table__item table__item--header" onclick="sortTable(0, 'N')">ID</th>
+                <th class="table__item table__item--header" onclick="sortTable(1, 'S')">Name</th>
+                <th class="table__item table__item--header" onclick="sortTable(2, 'S')">City</th>
+                <th class="table__item table__item--header" onclick="sortTable(3, 'N')">Total income</th>
+                <th class="table__item table__item--header" onclick="sortTable(4, 'N')">Average income</th>
+                <th class="table__item table__item--header" onclick="sortTable(5, 'N')">Last month income</th>
             </tr>
         </table>
     </main>

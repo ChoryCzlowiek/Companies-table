@@ -10,9 +10,24 @@ body{
 
 .wrapper{
     width: 100%;
+    min-height: 100vh;
     background-color: bisque;
     overflow: hidden;
     position: relative;
+
+    &__input{
+        position: absolute;
+        top: 5vh;
+        right: 10%;
+        transform: translateY(-110%);
+        border: 2px solid black;
+        padding: 3px;
+
+        &:focus{
+            outline: none;
+            border: 4px solid orangered;
+        }
+    }
 
     .table{
         margin: 5vh auto;
@@ -21,11 +36,61 @@ body{
         border-collapse: collapse;
 
         &__item{
-            padding: 0 .2rem;
+            padding: .2rem;
+            font-size: .6rem;
+
+
+            &--header{
+                cursor: pointer;
+                font-size: .8rem;
+                color: beige;
+                background-color: olive;
+            }
         }
 
         &, &__item{
             border: 2px solid black;
+        }
+    }
+}
+
+@media (min-width: 768px){
+    .wrapper{
+
+        &__input{
+            width: 30%;
+            padding: 5px;
+        }
+
+        .table{
+
+            &__item{
+                padding: .4rem;
+                font-size: 1.1rem;
+
+
+                &--header{
+                    font-size: 1.3rem;
+                }
+            }
+
+            &, &__item{
+                border: 3px solid black;
+            }
+        }
+    }
+}
+
+@media (orientation:landscape){
+    .wrapper{
+
+        &__input{
+            position: absolute;
+            top: 10vh;
+        }
+
+        .table{
+            margin: 10vh auto;
         }
     }
 }
