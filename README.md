@@ -5,7 +5,6 @@
 * [General info](#general-info)
 * [Screenshots](#screenshots)
 * [Technologies](#technologies)
-* [Setup](#setup)
 * [Features](#features)
 * [Contact](#contact)
 
@@ -13,7 +12,7 @@
 This project is simple table of companies. It shows us datas of companies.
 
 ## Screenshots
-![Example screenshot](./img/screenshot.png)
+![Main site](./images/screenshot.jpg)
 
 ## Technologies
 Project is created with:
@@ -22,9 +21,6 @@ Project is created with:
 * CSS
 * JavaScript
 * SCSS
-
-## Setup
-Describe how to install / setup your local environement / add link to demo version.
 
 ## Features
 List of features ready and TODOs for future development
