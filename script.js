@@ -217,7 +217,6 @@ function sortTable(n, type) {
         switchcount = 0;
 
     const table = document.querySelector('.table');
-    const thead = table.childNodes[0];
     switching = true;
     dir = "asc";
 
