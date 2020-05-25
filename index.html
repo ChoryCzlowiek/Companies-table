@@ -12,17 +12,44 @@
 
 <body>
     <main class="wrapper">
-        <input type="text" class="wrapper__input" onkeyup="myFunction()" placeholder="Search for names..">
+        <nav class="wrapper__nav nav">
+            <div class="nav__pagination-container pagination-container">
+                <div class="pagination-container__box">
+                    <span class="pagination-container__item" id="start">&lsaquo;&lsaquo;</span>
+                </div>
+                <div class="pagination-container__box">
+                    <span class="pagination-container__item" id="previous">&lsaquo;</span>
+                </div>
+                <div class="pagination-container__box">
+                    <span class="pagination-container__item pagination-container__item--text" id="pageNumber">1/10</span>
+                </div>
+                <div class="pagination-container__box">
+                    <span class="pagination-container__item" id="next">&rsaquo;</span>
+                </div>
+                <div class="pagination-container__box">
+                    <span class="pagination-container__item" id="end">&rsaquo;&rsaquo;</span>
+                </div>
+            </div>
+            <input type="text" class="nav__input" onkeyup="filterTable()" placeholder="Search for names..">
+        </nav>
 
         <table class="wrapper__table table">
-            <tr class="table__row">
-                <th class="table__item table__item--header" onclick="sortTable(0, 'N')">ID</th>
-                <th class="table__item table__item--header" onclick="sortTable(1, 'S')">Name</th>
-                <th class="table__item table__item--header" onclick="sortTable(2, 'S')">City</th>
-                <th class="table__item table__item--header" onclick="sortTable(3, 'N')">Total income</th>
-                <th class="table__item table__item--header" onclick="sortTable(4, 'N')">Average income</th>
-                <th class="table__item table__item--header" onclick="sortTable(5, 'N')">Last month income</th>
-            </tr>
+            <thead>
+                <tr class="table__row">
+                    <th class="table__item table__item--header" id="id" onclick="sortTable(0, 'N')">ID</th>
+                    <th class="table__item table__item--header" id="name" onclick="sortTable(1, 'S')">Name</th>
+                    <th class="table__item table__item--header" id="city" onclick="sortTable(2, 'S')">City</th>
+                    <th class="table__item table__item--header" id="totalIncome" onclick="sortTable(3, 'N')">Total
+                        income
+                    </th>
+                    <th class="table__item table__item--header" id="averageIncome" onclick="sortTable(4, 'N')">Average
+                        income</th>
+                    <th class="table__item table__item--header" id="lastMonthIncome" onclick="sortTable(5, 'N')">Last
+                        month
+                        income</th>
+                </tr>
+            </thead>
+            <tbody id="table-data"></tbody>
         </table>
     </main>
 

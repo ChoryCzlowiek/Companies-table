@@ -1,6 +1,129 @@
-// Sum total income
+const APP_STORE = {
+    itemsPerPage: 10,
+    page: 1,
+    pages: 1,
+    loading: false,
+    data: [],
+    getCompaniesURL: 'https://recruitment.hal.skygate.io/companies',
+    getCompaniesIncomeURL: 'https://recruitment.hal.skygate.io/incomes'
+};
 
-const sumTotalIncome = (incomes) => {
+function renderCompanies() {
+    const table = document.querySelector('.table');
+    const tableBodyId = 'table-data';
+    const oldTbody = document.getElementById(tableBodyId);
+    const tbody = document.createElement('tbody');
+    tbody.id = tableBodyId;
+
+    const sliceLeftBound = (APP_STORE.page - 1) * APP_STORE.itemsPerPage;
+    const sliceRightBound = (APP_STORE.page - 1) * APP_STORE.itemsPerPage + APP_STORE.itemsPerPage;
+    const dataPerPage = APP_STORE.data.slice(sliceLeftBound, sliceRightBound);
+
+    dataPerPage.forEach(companyWithIncome => {
+        const row = document.createElement('tr');
+        row.classList.add('table__row');
+        tbody.appendChild(row);
+
+        companyWithIncome.totalIncome = sumTotalIncome(companyWithIncome.incomes);
+        companyWithIncome.averageIncome = (sumTotalIncome(companyWithIncome.incomes) / 50).toFixed(2);
+        companyWithIncome.lastMonthIncome = getLastMonthIncome(companyWithIncome.incomes);
+
+        addTdToRow(companyWithIncome, row);
+    });
+
+    oldTbody.parentNode.replaceChild(tbody, oldTbody);
+}
+
+async function getCompaniesAndRender() {
+    setLoading(true);
+    let companies = await getCompanies();
+
+    Promise.all(companies.map(company => {
+        return getCompaniesIncome(company).then(res => ({ ...company, ...res }));
+    }))
+        .then(companiesWithIncomes => {
+            APP_STORE.data = companiesWithIncomes;
+            renderCompanies();
+            setLoading(false);
+        })
+        .catch(error => {
+            console.error(error);
+            setLoading(false);
+        });
+}
+
+
+function setLoading(isLoading) {
+    const wrapperClass = '.wrapper';
+    const loadingClass = '--loading';
+    const wrapper = document.querySelector(wrapperClass);
+
+    LOADING = isLoading;
+    if (isLoading) {
+        wrapper.classList.add(loadingClass);
+    } else {
+        wrapper.classList.remove(loadingClass);
+    }
+}
+
+
+async function getCompanies() {
+    let response = await fetch(APP_STORE.getCompaniesURL);
+    let data = await response.json();
+
+    const nOfItems = data.length;
+    setPaging(nOfItems);
+
+    return data;
+}
+
+function setPaging(nOfItems) {
+    APP_STORE.pages = Math.ceil(nOfItems / APP_STORE.itemsPerPage);
+
+    document.getElementById('start').addEventListener('click', function () {
+        setPageNumber(1, true);
+    });
+    document.getElementById('previous').addEventListener('click', function () {
+        setPageNumber(APP_STORE.page - 1, true);
+    });
+    document.getElementById('next').addEventListener('click', function () {
+        setPageNumber(APP_STORE.page + 1, true);
+    });
+    document.getElementById('end').addEventListener('click', function () {
+        setPageNumber(APP_STORE.pages, true);
+    });
+
+    setPageNumber(1);
+}
+
+
+function setPageNumber(page, render = false) {
+    try {
+        if (typeof page !== 'number') {
+            throw new Error('page must be of type number');
+        }
+        if (page >= 1 && page <= APP_STORE.pages) {
+            APP_STORE.page = page;
+            document.getElementById("pageNumber").innerHTML = `${page}/${APP_STORE.pages}`;
+            if (render) {
+                renderCompanies();
+            }
+        }
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+
+async function getCompaniesIncome(company) {
+    let response = await fetch(`${APP_STORE.getCompaniesIncomeURL}/${company.id}`);
+    let data = await response.json();
+
+    return data;
+}
+
+
+function sumTotalIncome(incomes) {
     let sumIncome = 0;
 
     incomes.forEach(income => {
@@ -10,97 +133,79 @@ const sumTotalIncome = (incomes) => {
     return sumIncome.toFixed(2);
 }
 
-// // Add td to table
 
-const addTdToRow = (company, row) => {
-    for (let i = 0; i < Object.keys(company).length; i++) {
-        const td = document.createElement('td');
-        td.classList.add('table__item')
+function getLastMonthIncome(incomes) {
+    incomes.sort((firstEl, secondEl) => {
+        return new Date(firstEl.date) < new Date(secondEl.date) ? 1 : -1;
+    });
 
-        if (i === 0) {
-            td.innerHTML = company.id;
-        } else if (i === 1) {
-            td.innerHTML = company.name;
-        } else if (i === 2) {
-            td.innerHTML = company.city;
-        } else if (i === 3) {
-            td.innerHTML = company.totalIncomes;
-        } else if (i === 4) {
-            td.innerHTML = company.averageIncomes;
-        } else if (i === 5) {
-            td.innerHTML = company.lastMonthIncome;
-        }
+    const lastDate = new Date(incomes[0].date);
+    const lastYear = lastDate.getFullYear();
+    const lastMonth = lastDate.getMonth();
 
-        row.appendChild(td);
-    }
-}
+    const lastMonthIncomes = incomes.filter(income => {
+        const date = new Date(income.date);
+        const year = date.getFullYear()
+        const month = date.getMonth();
 
-// Get companies data
-
-const getCompanies = async () => {
-    const url = 'https://recruitment.hal.skygate.io/companies';
-
-    let response = await fetch(url);
-    let data = await response.json();
-
-    return data;
-}
-
-// Get companies with incomes
-
-const getCompaniesIncome = async (company) => {
-    let response = await fetch(`https://recruitment.hal.skygate.io/incomes/${company.id}`);
-    let data = await response.json();
-
-    return data;
-}
-
-// Get last month incomes
-
-const getLastMonthIncome = (company) => {
-    const allDatas = company.map(data => {
-        return data.date.slice(0, 7)
-    })
-
-    allDatas.sort().reverse();
-
-    let lastMonthIncome = 0;
-
-    company.forEach(data => {
-        if (data.date.includes(allDatas[0])) {
-            lastMonthIncome += Number(data.value)
+        if (year === lastYear && month === lastMonth) {
+            return true;
+        } else {
+            return false;
         }
     });
 
-    return lastMonthIncome.toFixed(2);
+    const lastMonthIncomesSum = lastMonthIncomes.reduce((acc, curr) => {
+        return acc + Number(curr.value);
+    }, 0);
+
+    return lastMonthIncomesSum.toFixed(2);
 }
 
-// Display companies in table
 
-const showCompaniesInTable = async () => {
-    const table = document.querySelector('.table');
+function addTdToRow(company, row) {
+    Object.keys(company).forEach(key => {
+        const td = document.createElement('td');
+        td.classList.add('table__item');
+        let innerHTML;
 
-    let companies = await getCompanies();
+        switch (key) {
+            case 'id': {
+                innerHTML = company.id;
+                break;
+            }
+            case 'name': {
+                innerHTML = company.name;
+                break;
+            }
+            case 'city': {
+                innerHTML = company.city;
+                break;
+            }
+            case 'totalIncome': {
+                innerHTML = company.totalIncome;
+                break;
+            }
+            case 'averageIncome': {
+                innerHTML = company.averageIncome;
+                break;
+            }
+            case 'lastMonthIncome': {
+                innerHTML = company.lastMonthIncome;
+                break;
+            }
+            default: {
+                break;
+            }
+        }
 
-    companies.forEach(async (company) => {
-        const row = document.createElement('tr');
-        row.classList.add('table__row');
-        table.appendChild(row);
-
-        let companyIncomes = await getCompaniesIncome(company);
-
-        company.totalIncomes = sumTotalIncome(companyIncomes.incomes);
-        company.averageIncomes = sumTotalIncome(companyIncomes.incomes) / 50;
-        company.lastMonthIncome = getLastMonthIncome(companyIncomes.incomes);
-
-        addTdToRow(company, row);
-    })
-
+        if (innerHTML) {
+            td.innerHTML = innerHTML;
+            row.appendChild(td);
+        }
+    });
 }
 
-showCompaniesInTable();
-
-// Function to sort table by header click
 
 function sortTable(n, type) {
     let switching,
@@ -111,14 +216,15 @@ function sortTable(n, type) {
         dir,
         switchcount = 0;
 
-    const table = document.querySelector('.table')
+    const table = document.querySelector('.table');
+    const thead = table.childNodes[0];
     switching = true;
     dir = "asc";
 
     while (switching) {
         switching = false;
 
-        const rows = table.querySelectorAll('.table__row');
+        const rows = table.rows;
 
         for (i = 1; i < rows.length - 1; i++) {
             shouldSwitch = false;
@@ -165,10 +271,9 @@ function sortTable(n, type) {
     }
 }
 
-// Filter table
 
-function myFunction() {
-    const input = document.querySelector('.wrapper__input');
+function filterTable() {
+    const input = document.querySelector('.nav__input');
     const filter = input.value.toUpperCase();
     const table = document.querySelector('.table');
     const tr = table.getElementsByTagName("tr");
@@ -189,3 +294,8 @@ function myFunction() {
         }
     }
 }
+
+
+
+
+getCompaniesAndRender();
