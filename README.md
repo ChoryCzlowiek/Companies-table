@@ -5,6 +5,7 @@
 * [General info](#general-info)
 * [Screenshots](#screenshots)
 * [Technologies](#technologies)
+* [Installation](#installation)
 * [Features](#features)
 * [Contact](#contact)
 
@@ -21,6 +22,12 @@ Project is created with:
 * CSS
 * JavaScript
 * SCSS
+
+## Installation
+
+* CLone or download repository from [repo](https://github.com/ChoryCzlowiek/Companies-table.git)
+* Make sure ```index.html``` exist
+* Open ```index.html``` in your browser
 
 ## Features
 List of features ready and TODOs for future development
