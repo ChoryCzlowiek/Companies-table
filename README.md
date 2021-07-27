@@ -1,4 +1,4 @@
-# Project Name
+# Companies Table
 > Simple table of companies created with HTML, CSS(SCSS) and JavaScript!
 
 ## Table of contents
